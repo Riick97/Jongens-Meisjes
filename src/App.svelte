@@ -40,6 +40,8 @@
 	function restartRoom() {
 		jongMeisj.restartRoom(state.room);
     state.game = jongMeisj.createGame(state.room.letter)
+    state.room.members = []
+    db.updateRoom(state.room.name, state.room)
 	}
 
 	function submitWord(e) {
@@ -48,6 +50,8 @@
 
 	function finishGame() {
 		jongMeisj.finishGame(state.game, state.room, state.user);
+    state.room.started = false;
+    db.updateRoom(state.room.name, state.room)
 	}
 
 	$: if (state.room.started) {
