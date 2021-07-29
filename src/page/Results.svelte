@@ -3,7 +3,6 @@
     import page from 'page'
 
     export let state = {};
-    let members = state.room.finishedMembers;
 
 	let dispatch = createEventDispatcher();
 
@@ -16,7 +15,7 @@
 
 <div class="container">
     <div class="wrapper-members">
-        {#each members as member}
+        {#each state.room.finishedMembers as member}
         <div class="place">
             user: {member.uid} time: {member.time}
         </div>

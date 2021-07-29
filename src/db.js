@@ -28,7 +28,8 @@ export function listenToDB(roomId, room, cb) {
         collectionRef.doc(roomId).onSnapshot((doc) => {
             console.log("Listening: ", doc.data());
             room = doc.data();
-            cb(doc.data())
+            if (!room) room = {}
+            if (cb) cb(room)
             res(room);
         });
     })
@@ -39,5 +40,13 @@ export function updateRoom(roomId, room) {
         collectionRef.doc(roomId).update(
             room
         )
+        res()
+    })
+}
+
+export function deleteRoom(roomId) {
+    return new Promise((res, rej) => {
+        collectionRef.doc(roomId).delete()
+        res()
     })
 }

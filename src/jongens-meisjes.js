@@ -57,7 +57,6 @@ export function createRoom(user, name){
 }
 
 export function restartRoom(room){
-    room.finishedMembers = []
     room.letter = getRandomLetter();
     room.started = false;
 }
@@ -65,6 +64,11 @@ export function restartRoom(room){
 export function joinRoom(room, user){
     room.members.push(user.uid);
     user.room = room.id;
+}
+
+export function leaveRoom(room, user) {
+    room.members = room.members.filter(id => id != user.uid)
+    user.room = null
 }
 
 export function createUser(){
@@ -89,19 +93,25 @@ function story1() {
     let user4 = createUser()
     
     //User 1 creates a room
+    let state1 = {}
     let room = createRoom(user1, 'myRoom')
+    state1.user = user1
+    state1.room = room
     db.createListenRoomDB(room)
     
     
     //User 2 joins the room
+    let state2 = {}
     let room2 = {}
     db.listenToDB(room.id, room2)
     joinRoom(room2, user2)
+    state2.user = user2
+    state2.room = room2
     db.updateRoom(room2.name, room)
     
     //User 1 sets the room as ready
-    readyRoom(room)
-    db.updateRoom(room.name, room)
+    readyRoom(state1.room)
+    db.updateRoom(state1.room.name, state1.room)
     
     //User 1 starts playing
     let game1 = createGame(room.letter)

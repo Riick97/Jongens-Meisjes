@@ -57,7 +57,7 @@
 						submitWord(event.target.value, 'boy');
 					}}
 					type="text"
-					value="{letter}"
+					placeholder="{letter}..."
 				/>
 			</div>
 			<div class="wrapper-input">
@@ -67,7 +67,7 @@
 						submitWord(event.target.value, 'girl');
 					}}
 					type="text"
-					value="{letter}"
+					placeholder="{letter}..."
 				/>
 			</div>
 		</div>

@@ -8,6 +8,10 @@
 	import LobbyJoin from './page/LobbyJoin.svelte';
 	import Game from './page/Game.svelte';
 	import Results from './page/Results.svelte';
+  import { onDestroy } from 'svelte';
+
+
+	
 
 	let state = { room: {} };
 	createUser();
@@ -19,7 +23,7 @@
 	async function joinRoom(e) {
     let roomId = e.detail.roomId
     let cb = function(dbRoom) {state.room = dbRoom}
-    state.room = await db.listenToDB(roomId, state.room, cb)
+    await db.listenToDB(roomId, state.room, cb)
     jongMeisj.joinRoom(state.room, state.user)
     db.updateRoom(state.room.name, state.room)
 	}
@@ -34,15 +38,27 @@
 	function startRoom() {
 		jongMeisj.readyRoom(state.room);
 		state.room.started = true;
+    state.room.finishedMembers = []
 		db.updateRoom(state.room.name, state.room);
 	}
 
 	function restartRoom() {
 		jongMeisj.restartRoom(state.room);
     state.game = jongMeisj.createGame(state.room.letter)
-    state.room.members = []
     db.updateRoom(state.room.name, state.room)
 	}
+
+  function leaveRoom() {
+    if(!state.room.name) return
+    jongMeisj.leaveRoom(state.room, state.user)
+    db.updateRoom(state.room.name, state.room)
+
+    if(state.room.uid === state.user.uid) db.deleteRoom(state.room.name)
+    else {
+      let cb = function(dbRoom) {state.room = dbRoom}
+      db.listenToDB('null', null, cb);
+    }
+  }
 
 	function submitWord(e) {
 		jongMeisj.submitWord(state.game, { category: e.detail.category, word: e.detail.word });
@@ -60,6 +76,8 @@
 		page('/game');
 	}
 
+  onDestroy(() => console.log('destroyed'));
+
 	//routing
 	let component;
 	page('/', () => (component = Home));
@@ -70,8 +88,8 @@
 	page.start();
 </script>
 
-<Navbar />
-{#if component === Home} <Home on:createRoom={createRoom} />{/if}
+<Navbar on:leaveRoom={leaveRoom} />
+{#if component === Home} <Home on:createRoom={createRoom}  />{/if}
 {#if component === LobbyCreate} <LobbyCreate on:startRoom={startRoom} {state} />{/if}
 {#if component === LobbyJoin} <LobbyJoin on:joinRoom={joinRoom} {state} />{/if}
 {#if component === Game} <Game on:submitWord={submitWord} on:finishGame={finishGame} {state} />{/if}

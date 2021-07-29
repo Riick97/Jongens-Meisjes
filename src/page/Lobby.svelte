@@ -1,8 +1,7 @@
 <script>
 	export let state = {};
-    let members
 
-    $: {members = state.room.members; console.log(members)}
+    export let isReady = false;
 </script>
 
 <div class="container">
@@ -10,9 +9,18 @@
 	<div class="wrapper-members">
 		<h3>Members</h3>
         <div class="wrapper-items">
-            {#each members as member}
+            {#each state.room.members as member}
                 <div class="member">
-                    User{member}
+                    <div class="left">User{member}</div>
+                    <div class="right">
+                        {#if state.room.uid === member}
+                        crown
+                        {:else if !isReady}
+                        waiting
+                        {:else}
+                        ready
+                        {/if}
+                    </div>
                 </div>
             {/each}
         </div>
@@ -40,5 +48,7 @@
     }
 	.member {
 		padding: 10px;
+        display: flex;
+        justify-content: space-between;
 	}
 </style>

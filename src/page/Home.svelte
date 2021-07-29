@@ -35,10 +35,11 @@
 		width: 130px;
 		margin: 4px;
 		padding: 5px;
+		border-radius: 5px;
 	}
 
 	.graphic {
-		height: 100px;
+		height: 150px;
 	}
 	.container {
 		flex-direction: column;

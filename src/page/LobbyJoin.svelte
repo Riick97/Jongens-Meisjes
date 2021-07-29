@@ -4,8 +4,8 @@
     import page from 'page'
 
     export let state = {room: {}}
-    let name = state.room.name
 
+    let isReady = false
     let step = 1;
 
     let dispatch = createEventDispatcher();
@@ -22,14 +22,18 @@
 
 <main>
     <div class="container">
+        {#if state.room.name}
         {#if step === 1}
         <form on:submit="{joinRoom}" action="">
-            <input value="room" type="text">
+            <input placeholder="room..." type="text">
             <button>join</button>
         </form>
         {:else}
-        <Lobby {state} />
-        <button>ready</button>
+        <Lobby {state} {isReady} />
+        <button on:click="{() => isReady = true}">ready</button>
+        {/if}
+        {:else}
+        The lobby has been ended
         {/if}
 
     </div>
