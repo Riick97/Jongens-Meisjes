@@ -1,7 +1,7 @@
 <script>
 	export let state = {};
 
-    export let isReady = false;
+
 </script>
 
 <div class="container">
@@ -11,11 +11,11 @@
         <div class="wrapper-items">
             {#each state.room.members as member}
                 <div class="member">
-                    <div class="left">User{member}</div>
+                    <div class="left">{member.displayName} {#if member.uid === state.user.uid} (me) {/if}</div>
                     <div class="right">
-                        {#if state.room.uid === member}
+                        {#if state.room.uid === member.uid}
                         crown
-                        {:else if !isReady}
+                        {:else if !member.isReady}
                         waiting
                         {:else}
                         ready

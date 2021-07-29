@@ -1,4 +1,3 @@
-import { uid } from './user'
 import * as db from './db'
 
 export function createGame(letter){
@@ -24,7 +23,7 @@ export function finishGame(game, room, user){
     let elapsedTime = (game.finishedTime - game.startTime) / 1000;
     if (room.finishedMembers.length === 0) {user.wins++}
     else {user.losses++}
-    room.finishedMembers.push({uid: user.uid, time: elapsedTime.toFixed(1) + ' seconds'})
+    room.finishedMembers.push({displayName: user.displayName, uid: user.uid, time: elapsedTime.toFixed(1) + ' seconds'})
 }
 
 function getRandomLetter() {
@@ -45,9 +44,10 @@ function getRandomLetter() {
 
 export function createRoom(user, name){
     let room = {};
+    user.isReady = true
     room.id = Date.now()
     room.name = name
-    room.members = [user.uid];
+    room.members = [user];
     room.finishedMembers = [];
     room.uid = user.uid;
     room.started = false;
@@ -62,7 +62,7 @@ export function restartRoom(room){
 }
 
 export function joinRoom(room, user){
-    room.members.push(user.uid);
+    room.members.push(user);
     user.room = room.id;
 }
 
@@ -73,15 +73,38 @@ export function leaveRoom(room, user) {
 
 export function createUser(){
     let user = {}
-    user.uid = Math.floor(Math.random() * 1000)
+    user.uid = ''
+    user.displayName = `User-${Math.floor(Math.random() * 1000)}`
     user.room = null;
+    user.isReady = false;
     user.wins = 0;
     user.losses = 0;
     return user;
 }
 
 export function readyRoom(room) {
-    room.started = true;
+    let start = true
+    room.members.forEach(member => {
+        if (!member.isReady) start = false
+    });
+    room.started = start;
+    return start;
+}
+
+export function userReady(room, user) {
+    room.members.forEach(member => {
+        if (member.uid === user.uid) {
+            member.isReady = true
+        }
+    });
+}
+
+export function userUnReady(room, user){
+    room.members.forEach(member => {
+        if (member.uid === user.uid) {
+            member.isReady = false
+        }
+    });
 }
 
 function story1() {

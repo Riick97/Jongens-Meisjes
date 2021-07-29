@@ -15,9 +15,9 @@
 
 <div class="container">
     <div class="wrapper-members">
-        {#each state.room.finishedMembers as member}
+        {#each state.room.finishedMembers as member, i}
         <div class="place">
-            user: {member.uid} time: {member.time}
+            {i + 1}. {member.displayName} {#if state.user.uid === member.uid} (me) {/if} - time: {member.time}
         </div>
         {/each}
     </div>
