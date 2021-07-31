@@ -9,4 +9,4 @@ Translated 'Boys and Girls' is a traditional dutch game originally played with p
 This application was build using Svelte Vite and Firebase. The multiplayer feature was achieved using the firestore database realtime updates.
 
 ## Links 
-The application can be found at: jongens-meisjes.web.app
+The application can be found at: https://jongens-meisjes.web.app/
