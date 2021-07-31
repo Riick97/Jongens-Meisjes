@@ -11,7 +11,7 @@
 	let dispatch = createEventDispatcher();
 	function joinRoom(e) {
 		e.preventDefault();
-		let roomId = e.target[0].value;
+		let roomId = (e.target[0].value).toLowerCase();
 		dispatch('joinRoom', { roomId });
 	}
 

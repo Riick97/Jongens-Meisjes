@@ -73,7 +73,7 @@
 	#home {
 		height: 100vh;
 		background: linear-gradient(to top, rgba(255,255,255,0.5) 50%,
-              rgba(255,255,255,1) 90%), url('gender3.svg');
+              rgba(255,255,255,1) 90%), url('/gender3.svg');
 		background-size: cover;
 	}
 
@@ -96,7 +96,7 @@
 		background-color: hsl(196, 77%, 61%);
 	}
 	.boy .graphic {
-		background-image: url('boy.png');
+		background-image: url('/boy.png');
 		background-size: 70%;
 		background-repeat: no-repeat;
 		background-position-x: center;
@@ -106,7 +106,7 @@
 		background-color: #ffc2d4;
 	}
 	.girl .graphic {
-		background-image: url('girl2.png');
+		background-image: url('/girl2.png');
 		background-size: cover;
 		background-repeat: no-repeat;
 		background-position-x: center;
