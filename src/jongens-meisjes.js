@@ -5,7 +5,13 @@ export function createGame(letter){
     game.letter = letter
     game.words = {
         boy: '',
-        girl: ''
+        girl: '',
+        animal: '',
+        country: '',
+        brand: '',
+        'food/drink': '',
+        'actor/actress': '',
+        'film/tv': ''
     }
     game.finished = false;  
     
@@ -23,7 +29,20 @@ export function finishGame(game, room, user){
     let elapsedTime = (game.finishedTime - game.startTime) / 1000;
     if (room.finishedMembers.length === 0) {user.wins++}
     else {user.losses++}
-    room.finishedMembers.push({displayName: user.displayName, uid: user.uid, time: elapsedTime.toFixed(1) + ' seconds'})
+
+    //convert words to array
+    let words = [];
+    for (const property in game.words) {
+        words.push({property: property, word: game.words[property] })
+    }
+
+
+    room.finishedMembers.push({
+        displayName: user.displayName, 
+        uid: user.uid, 
+        time: elapsedTime.toFixed(1) + ' seconds',
+        words: words
+    })
 }
 
 function getRandomLetter() {

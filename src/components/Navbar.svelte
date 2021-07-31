@@ -17,7 +17,7 @@
 <nav>
 	<div class="container">
 		{#if location !== '/'}
-			<div on:click={() => {page('/'); dispatch('leaveRoom')}} class="left">home</div>
+			<div on:click={() => {page('/'); dispatch('leaveRoom')}} class="left"><i class="fas fa-home"></i></div>
 		{/if}
 		<div class="right" />
 	</div>
@@ -26,6 +26,16 @@
 <style>
 	nav {
 		height: 50px;
+		width: 100%;
+		position: fixed;
+		z-index: 2;
+		top: 0;
+		right: 0;
+		background-color: white;
+		box-shadow: 0px 0px 5px 1px #00000027;
+	}
+	.left {
+		font-size: 1.6rem;
 	}
 	.container {
 		justify-content: space-between;

@@ -39,5 +39,6 @@
 <style>
     .letter {
         font-size: 5rem;
+        color: white;
     }
 </style>

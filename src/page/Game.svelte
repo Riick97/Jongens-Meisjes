@@ -1,32 +1,23 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
 	import page from 'page';
-	import Counter from '../components/Countdown.svelte'
-	import Letter from '../components/Letter.svelte'
+	import Counter from '../components/Countdown.svelte';
+	import Letter from '../components/Letter.svelte';
+	import WordInput from '../components/WordInput.svelte';
+	import { fade, scale, fly } from 'svelte/transition';
 
 	export let state = {};
-	let letter = state.game.letter;
 
-	let words = state.game.words;
+	let letter = state.game.letter;
+	let words = [];
+	for (const property in state.game.words) {
+		words.push({ property: property, word: state.game.words[property] });
+	}
+
 	let finished = false;
 	let show = false;
 
-	function check() {
-		let every = true;
-		for (const property in state.game.words) {
-			if (state.game.words[property] === '') every = false;
-		}
-		if (every) finished = true;
-	}
-
 	let dispatch = createEventDispatcher();
-	function submitWord(word, category) {
-		let letters = word.trim().split('')
-		let same = letters[0].toLowerCase() === letter.toLowerCase()
-		if (!same) return
-		dispatch('submitWord', { word, category });
-		check();
-	}
 
 	function finishGame() {
 		dispatch('finishGame');
@@ -36,63 +27,78 @@
 
 <main>
 	{#if !show}
-	<div class="counter">
-		<Counter on:ready={() => show = true} />
-	</div>
+		<div class="counter">
+			<Counter on:ready={() => (show = true)} />
+		</div>
 	{/if}
 	<form action="">
-		<div class="header centered">
+		<div transition:fly={{ y: 200, duration: 500 }} class="header centered">
 			{#if finished}
-				<button on:click={finishGame}>finished</button>
+				<button
+					in:scale
+					on:click={(e) => {
+						e.preventDefault();
+						finishGame();
+					}}>finished</button
+				>
 			{:else}
 				<Letter {letter} {show} />
 			{/if}
 		</div>
 		{#if show}
-		<div class="container">
-			<div class="wrapper-input">
-				<label for="Boy">Boy</label>
-				<input
-					on:blur={(event) => {
-						submitWord(event.target.value, 'boy');
-					}}
-					type="text"
-					placeholder="{letter}..."
-				/>
+			<div transition:fly={{ y: 200, duration: 500 }} class="container">
+				{#each words as word}
+					<WordInput
+						{state}
+						{word}
+						on:submitWord
+						on:finished={() => {
+							finished = true;
+						}}
+					/>
+				{/each}
 			</div>
-			<div class="wrapper-input">
-				<label for="Girl">Girl</label>
-				<input
-					on:blur={(event) => {
-						submitWord(event.target.value, 'girl');
-					}}
-					type="text"
-					placeholder="{letter}..."
-				/>
-			</div>
-		</div>
 		{/if}
 	</form>
 </main>
 
 <style>
-	label {
-		display: block;
+	main {
+		background-color: #f3f7fa;
+		height: 100vh;
 	}
+
 	form {
 		width: 100%;
 	}
+
+	button {
+		height: 40px;
+		width: 200px;
+		border: none;
+		border-radius: 10px;
+		background-color: hsla(0, 0%, 100%, 80%);
+	}
 	.header {
-		height: 100px;
+		padding-top: 100px;
+		padding-bottom: 50px;
+		min-height: 200px;
+		background-color: hsl(196, 77%, 61%);
+		color: white;
+		transition: ease 1000ms;
+		box-shadow: 0px 0px 5px 1px #00000027;
+		position: sticky;
+		top: 0;
+		left: 0;
+		z-index: 1;
 	}
-	.wrapper-input {
-		padding: 10px 0;
-		width: 100%;
-	}
+
 	.container {
 		flex-direction: column;
+		padding-top: 20px;
 	}
 	.counter {
+		padding-top: 100px;
 		height: 300px;
 	}
 </style>

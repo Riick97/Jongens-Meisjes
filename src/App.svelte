@@ -8,21 +8,20 @@
 	import LobbyJoin from './page/LobbyJoin.svelte';
 	import Game from './page/Game.svelte';
 	import Results from './page/Results.svelte';
-	import * as user from './user'
-	import { onDestroy } from 'svelte';
+	import * as user from './user';
+
 
 	let state = { room: {} };
 	createUser();
 
-
 	function createUser() {
 		state.user = jongMeisj.createUser();
 		function cb(authUid) {
-			state.user.uid = authUid
-			state.user.displayName = `User-${authUid.substring(0, 6)}`
+			state.user.uid = authUid;
+			state.user.displayName = `User-${authUid.substring(0, 6)}`;
 		}
-		user.signIn(cb)
-		user.listen(cb)
+		user.signIn(cb);
+		user.listen(cb);
 	}
 
 	async function joinRoom(e) {
@@ -46,7 +45,7 @@
 
 	function startRoom() {
 		let start = jongMeisj.readyRoom(state.room);
-		if (!start) return
+		if (!start) return;
 
 		state.room.started = true;
 		state.room.finishedMembers = [];
@@ -56,7 +55,7 @@
 	function restartRoom() {
 		jongMeisj.restartRoom(state.room);
 		if (state.room.uid !== state.user.uid) {
-			jongMeisj.userUnReady(state.room, state.user)
+			jongMeisj.userUnReady(state.room, state.user);
 		}
 		state.game = jongMeisj.createGame(state.room.letter);
 		db.updateRoom(state.room.name, state.room);
@@ -87,9 +86,8 @@
 	}
 
 	function userReady() {
-		jongMeisj.userReady(state.room, state.user)
-		debugger;
-		db.updateRoom(state.room.name, state.room)
+		jongMeisj.userReady(state.room, state.user);
+		db.updateRoom(state.room.name, state.room);
 	}
 
 	$: if (state.room.started) {
@@ -98,7 +96,6 @@
 		page('/game');
 	}
 
-	onDestroy(() => console.log('destroyed'));
 
 	//routing
 	let component;
@@ -113,9 +110,7 @@
 <Navbar on:leaveRoom={leaveRoom} />
 {#if component === Home} <Home on:createRoom={createRoom} />{/if}
 {#if component === LobbyCreate} <LobbyCreate on:startRoom={startRoom} {state} />{/if}
-{#if component === LobbyJoin} <LobbyJoin on:joinRoom={joinRoom} on:userReady={userReady} {state} />{/if}
+{#if component === LobbyJoin}
+	<LobbyJoin on:joinRoom={joinRoom} on:userReady={userReady} on:startRoom={startRoom} {state} />{/if}
 {#if component === Game} <Game on:submitWord={submitWord} on:finishGame={finishGame} {state} />{/if}
 {#if component === Results} <Results on:restartRoom={restartRoom} {state} />{/if}
-
-<style>
-</style>
